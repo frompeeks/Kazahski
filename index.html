@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Электроника бойынша тест</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-size: 1.05em;
+        }
+
+        .option:hover {
+            background: #f0f4ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .score {
+            font-size: 5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+        }
+
+        .result-message {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .answers-list {
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .answer-item {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .answer-item.correct {
+            border-left-color: #4caf50;
+        }
+
+        .answer-item.incorrect {
+            border-left-color: #f44336;
+        }
+
+        .answer-status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .correct .answer-status {
+            color: #4caf50;
+        }
+
+        .incorrect .answer-status {
+            color: #f44336;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .tab {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Электроника</h1>
+        <p class="subtitle">Білімді тексеру жүйесі</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('quiz')">Тест</button>
+            <button class="tab" onclick="switchTab('results')">Нәтижелер</button>
+        </div>
+
+        <div id="quiz-tab" class="tab-content active">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+
+            <div id="quiz-container"></div>
+
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>⬅ Артқа</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Келесі ➡</button>
+            </div>
+        </div>
+
+        <div id="results-tab" class="tab-content">
+            <div id="results-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Электр тогының өлшем бірлігі қандай?",
+                options: ["Вольт", "Ампер", "Ом", "Ватт"],
+                correct: 1
+            },
+            {
+                question: "Резистор не үшін қолданылады?",
+                options: ["Токты күшейту", "Токты бағыттау", "Кедергі жасау", "Энергия жинау"],
+                correct: 2
+            },
+            {
+                question: "Конденсатор қандай энергияны сақтайды?",
+                options: ["Механикалық", "Электрлік", "Жылулық", "Химиялық"],
+                correct: 1
+            },
+            {
+                question: "LED дегеніміз не?",
+                options: ["Жарық шашатын диод", "Лазерлік құрылғы", "Транзистор түрі", "Микросхема"],
+                correct: 0
+            },
+            {
+                question: "Транзистор негізінен не үшін қолданылады?",
+                options: ["Жарық шығару", "Сигналды күшейту", "Уақытты өлшеу", "Температураны өлшеу"],
+                correct: 1
+            },
+            {
+                question: "Arduino дегеніміз не?",
+                options: ["Бағдарламалау тілі", "Микроконтроллер платформасы", "Операциялық жүйе", "Веб-браузер"],
+                correct: 1
+            },
+            {
+                question: "Қуаттың өлшем бірлігі:",
+                options: ["Ампер", "Вольт", "Ватт", "Герц"],
+                correct: 2
+            },
+            {
+                question: "USB-дің толық атауы:",
+                options: ["Universal Serial Bus", "United System Base", "Ultra Speed Bus", "Universal Speed Board"],
+                correct: 0
+            },
+            {
+                question: "Диод токты қалай өткізеді?",
+                options: ["Екі бағытта да", "Тек бір бағытта", "Өткізбейді", "Кезекпен"],
+                correct: 1
+            },
+            {
+                question: "Процессордағы транзисторлар санын көрсететін заң:",
+                options: ["Ньютон заңы", "Ом заңы", "Мур заңы", "Кирхгоф заңы"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        let quizCompleted = false;
+
+        function renderQuestion() {
+            const container = document.getElementById('quiz-container');
+            const q = questions[currentQuestion];
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">Сұрақ ${currentQuestion + 1} / ${questions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((option, index) => `
+                            <div class="option ${answers[currentQuestion] === index ? 'selected' : ''}" 
+                                 onclick="selectOption(${index})">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else if (answers[currentQuestion] !== null) {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'Аяқтау ✓';
+                nextBtn.disabled = answers[currentQuestion] === null;
+            } else {
+                nextBtn.textContent = 'Келесі ➡';
+                nextBtn.disabled = false;
+            }
+        }
+
+        function updateProgress() {
+            const answeredCount = answers.filter(a => a !== null).length;
+            const percentage = (answeredCount / questions.length) * 100;
+            document.getElementById('progress').style.width = percentage + '%';
+        }
+
+        function finishQuiz() {
+            quizCompleted = true;
+            switchTab('results');
+        }
+
+        function calculateScore() {
+            let correct = 0;
+            answers.forEach((answer, index) => {
+                if (answer === questions[index].correct) {
+                    correct++;
+                }
+            });
+            return correct;
+        }
+
+        function renderResults() {
+            const container = document.getElementById('results-container');
+            
+            if (!quizCompleted) {
+                container.innerHTML = `
+                    <div class="result-card">
+                        <h2>Тестті әлі аяқтамадыңыз</h2>
+                        <p style="color: #666; margin: 20px 0;">Нәтижелерді көру үшін алдымен барлық сұрақтарға жауап беріп, тестті аяқтаңыз.</p>
+                        <button class="btn btn-primary" onclick="switchTab('quiz')">Тестке оралу</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const score = calculateScore();
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            let message = '';
+            if (percentage >= 90) message = '🏆 Керемет! Сіз шынайы маман!';
+            else if (percentage >= 70) message = '👏 Жақсы нәтиже! Білімді тереңдетіңіз!';
+            else if (percentage >= 50) message = '👍 Жаман емес! Одан да жақсы болуға болады!';
+            else message = '📚 Одан да көп оқыңыз!';
+
+            container.innerHTML = `
+                <div class="result-card">
+                    <h2>Сіздің нәтижеңіз</h2>
+                    <div class="score">${score}/${questions.length}</div>
+                    <div class="result-message">${message}</div>
+                    <div style="font-size: 1.2em; color: #667eea; font-weight: bold;">${percentage}% дұрыс жауап</div>
+                    
+                    <div class="answers-list">
+                        <h3 style="margin-bottom: 20px; color: #333;">Толық жауаптар:</h3>
+                        ${questions.map((q, index) => {
+                            const isCorrect = answers[index] === q.correct;
+                            return `
+                                <div class="answer-item ${isCorrect ? 'correct' : 'incorrect'}">
+                                    <div class="answer-status">${isCorrect ? '✓ Дұрыс' : '✗ Қате'}</div>
+                                    <div style="margin-bottom: 10px;"><strong>${index + 1}. ${q.question}</strong></div>
+                                    <div style="color: #666;">Сіздің жауабыңыз: ${q.options[answers[index]]}</div>
+                                    ${!isCorrect ? `<div style="color: #4caf50; margin-top: 5px;">Дұрыс жауап: ${q.options[q.correct]}</div>` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 30px;">🔄 Қайта бастау</button>
+                </div>
+            `;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'quiz') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('quiz-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('results-tab').classList.add('active');
+                renderResults();
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            quizCompleted = false;
+            switchTab('quiz');
+            renderQuestion();
+        }
+
+        // Initialize
+        renderQuestion();
+    </script>
+</body>
+</html>
